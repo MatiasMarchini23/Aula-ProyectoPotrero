@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTENTICACION</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+      <div class="container nav">
+      <a class="logo" href="https://matiasm23.pythonanywhere.com/">Proyecto<br>Potrero.</a>
+        <nav>
+          <ul>
+        
+          
+          </ul>
+        </nav>
+      </div>
+    </header>
+   
+    <section id="vald" class="intro container">
+    
+      <div class="course-card">
+          <div class="course-info">
+              <div class="text">
+                  <form id="registroForm">
+                      <h2>Validar Identidad</h2>
+                      <label for="dni">DNI:</label>
+                      <input type="text" id="dni" required>
+                      <input type="submit" value="Verificar DNI">
+                  </form>
+              </div>
+          </div>
+      </div>
+  </section>
+  <script>document.getElementById("registroForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Evitar que se envíe el formulario automáticamente
+  
+    var dniInput = document.getElementById("dni").value;
+    var url = "https://registro-bf0d7-default-rtdb.firebaseio.com/registro.json";
+  
+    // Realizar la petición GET a la API para verificar el DNI
+    fetch(url)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        // Verificar si el DNI existe en algún registro
+        var dniExiste = false;
+        for (var key in data) {
+          if (data.hasOwnProperty(key) && data[key].dni === dniInput) {
+            dniExiste = true;
+            break;
+          }
+        }
+        const loginUrl = "login.html";
+  
+        if (dniExiste) {
+          alert("El número de DNI ya existe en un registro.");
+          // Redirigir al usuario a login.html
+          window.location.href = loginUrl;
+        } else {
+          // Habilitar el formulario de carga de datos
+          document.getElementById("registroForm").innerHTML = `
+            <label for="nombreyapellido">Nombre y Apellido:</label>
+            <input type="text" id="nombreyapellido" required>
+            <label for="mail">Email:</label>
+            <input type="email" id="mail" required>
+            <label for="curso">Curso:</label>
+            <select id="curso" required>
+              <option value="Curso de HTML Básico">Curso de HTML Básico</option>
+              <option value="Curso de CSS para Principiantes">Curso de CSS para Principiantes</option>
+              <option value="Curso de JavaScript para Principiantes">Curso de JavaScript para Principiantes</option>
+              <option value="Curso de Git y GitHub">Curso de Git y GitHub</option>
+            </select>
+            <label for="contrasenia">Contraseña:</label>
+            <input type="password" id="contrasenia" required>
+            <input type="submit" value="Registrar">
+          `;
+  
+          // Agregar el evento de envío del formulario de registro
+          document.getElementById("registroForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evitar que se envíe el formulario automáticamente
+  
+            var datos = {
+              dni: dniInput,
+              nombreyapellido: document.getElementById("nombreyapellido").value,
+              mail: document.getElementById("mail").value,
+              curso: document.getElementById("curso").value,
+              contrasenia: document.getElementById("contrasenia").value
+            };
+  
+            // Realizar la petición POST a la API para guardar los datos de registro
+            fetch(url, {
+              method: "POST",
+              body: JSON.stringify(datos)
+            })
+            .then(function(response) {
+              alert("Registro exitoso!");
+              // Restablecer el formulario
+              document.getElementById("registroForm").reset();
+  
+              // Redirigir al usuario a login.html
+              window.location.href = loginUrl;
+            })
+            .catch(function(error) {
+              alert("Ha ocurrido un error. Por favor, intenta nuevamente.");
+              console.error(error);
+            });
+          });
+        }
+      })
+      .catch(function(error) {
+        alert("Ha ocurrido un error. Por favor, intenta nuevamente.");
+        console.error(error);
+      });
+  });
+  </script>
+    
+
+
+        <!-- Footer Section -->
+    
+        <footer>
+            <div class="footer-container">
+               <div class="sitemap-section">
+               
+               </div>
+               <div class="sitemap-section">
+                 
+                 
+               </div>
+               <div class="sitemap-section">
+                 <h3><a class="logo" href="https://matiasm23.pythonanywhere.com/">Proyecto Potrero.</a></h3>
+               </div>
+             </div>
+           </footer>
+        
+       
+       
+       
+       </body>
+     </html>
